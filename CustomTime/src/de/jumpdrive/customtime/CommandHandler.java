@@ -1,6 +1,8 @@
 package de.jumpdrive.customtime;
 
+import de.jumpdrive.customtime.helper.Helper;
 import de.jumpdrive.customtime.helper.prefixes;
+import de.jumpdrive.customtime.settings.SettingAutostart;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,6 +17,7 @@ import org.bukkit.command.CommandSender;
 public class CommandHandler {
     
     private final CustomTimeMain plugin;
+    private Helper h = new Helper();
     
     private final prefixes prefixes = new prefixes();
     
@@ -30,14 +33,43 @@ public class CommandHandler {
                     //ARGS sdt out (Hinweis auf Help)
                     customtime(sender);
                 } else {
-                    if(args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("start") || args[0].equalsIgnoreCase("1")){
+                    if(h.compare(args[0], new String[] {"on", "start", "1"})){
+                        if(args.length == 1){
+                            customtime_on();
+                        } else if(args.length > 1 && h.isHelp(args[1])) {
+                            customtime_on_help(sender, args[0]);
+                        }
                         // ON | START | 1
-                        customtime_on(sender);
-                    } else if(args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("stop") || args[0].equalsIgnoreCase("0")){
+                    } else if(h.compare(args[0], new String[] {"off", "stop", "0"})){
                         // OFF | STOP | 0
-                        customtime_off(sender);
+                        customtime_off();
+                        return true;
+                    } else if (args[0].equalsIgnoreCase("autostart")){
+                        if(args.length > 1){
+                            if(h.compare(args[1], new String[] {"true", "1", "on"})){
+                                customtime_autostart_true();
+                                return true;
+                            }
+                            if(h.compare(args[1], new String[] {"false", "0", "off"})){
+                                customtime_autostart_false();
+                                return true;
+                            }
+                            if(h.compare(args[1], new String[] {"help"})){
+                                customtime_autostart_help(sender);
+                                return true;
+                            }
+                            //Form: customtime autostart crap
+                            customtime_autostart(sender);
+                            return true;
+                        } else {
+                            customtime_autostart(sender);
+                            return true;
+                        }
                     } else if(args[0].equalsIgnoreCase("help")){
                         // HELP
+                        customtime_help(sender);
+                    } else if(args[0].equalsIgnoreCase("test")){
+                        // TEST !!!
                         customtime_help(sender);
                     } else {
                         // Unknow Argument
@@ -54,10 +86,6 @@ public class CommandHandler {
     }
     
     
-    private void messageSender(CommandSender sender, String message){
-        sender.sendMessage(message);
-    }
-    
     private void messageBroadcast(String message){
         Bukkit.getServer().broadcastMessage(message);
     }
@@ -68,6 +96,29 @@ public class CommandHandler {
     
     
     
+    private void customtime(CommandSender sender) {
+        String sdttext = "Usage: /realtime <help:on:off>";
+        sender.sendMessage(ChatColor.RED + sdttext);
+    }
+    
+    private void customtime_on(){
+        plugin.customTimeStart();
+        messageBroadcast(prefixes.PREFIX_INFO_HIGH + "CustomTime started");
+    }
+    
+    private void customtime_on_help(CommandSender sender, String commandArg){
+        String[] on_help = {
+            "Turn customtime on. Stops the normal daylightcycle to run the custom time.",
+            "This does NOT enable the autostart of customtime on reboot of the server. Use 'customtime autostart true' to enable the autostart",
+            "Usage: /customtime " + commandArg
+        };
+        h.messagesToSender(sender, on_help);
+    }
+    
+    private void customtime_off(){
+        plugin.customTimeStop();
+        messageBroadcast(prefixes.PREFIX_INFO_HIGH + "CustomTime stoped. Back to vanilla time.");
+    }
     
     private void customtime_help(CommandSender sender) {
         String helpText = "Realtime syncs the server Day-Night cycle to the day-night cycle of the servers local time.";
@@ -75,20 +126,34 @@ public class CommandHandler {
         customtime(sender);
     }
     
-    private void customtime_on(CommandSender sender){
-        plugin.customTimeStart();
-        messageBroadcast(prefixes.PREFIX_INFO_HIGH + "CustomTime started");
+    private void customtime_autostart(CommandSender sender){
+        String[] autostart_help = {
+            "Enables or disables the autostart of the customtime-plugin for every server start and restart.",
+            "This does NOT turn enable or disable the customtime plugin right now!",
+            "Usage: /customtime autostart <help:true:false>"
+        };
+        h.messagesToSender(sender, autostart_help);
     }
     
-    private void customtime_off(CommandSender sender){
-        plugin.customTimeStop();
-        messageBroadcast(prefixes.PREFIX_INFO_HIGH + "CustomTime stoped. Back to vanilla time.");
+    private void customtime_autostart_true(){
+        SettingAutostart settingAutostart = new SettingAutostart();
+        settingAutostart.saveAutostartActive(plugin);
     }
     
-    private void customtime(CommandSender sender) {
-        String sdttext = "Usage: /realtime <help:on:off>";
-        sender.sendMessage(ChatColor.RED + sdttext);
+    private void customtime_autostart_false(){
+        SettingAutostart settingAutostart = new SettingAutostart();
+        settingAutostart.saveAutostartDisabled(plugin);
     }
+    
+    private void customtime_autostart_help(CommandSender sender){
+        String[] autostart_help = {
+            "Enables the autostart of the customtime-plugin for every server start and restart.",
+            "This does NOT turn customtime on / enable it. Use 'customtime on' to enable the plugin now.",
+            "Usage: /customtime autostart true"
+        };
+        h.messagesToSender(sender, autostart_help);
+    }
+    
     
     
     ////////////////////////////////////////////////////////////////////////
