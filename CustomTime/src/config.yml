@@ -1,0 +1,16 @@
+settings:
+    autostart: true
+    #The default pollingrate is 20. Minecraft Server normaly run on 20 Ticks per Second so it will poll every second
+    pollingrate: 20
+    #durationDay is 3600 seconds by default (= 1 hour)
+    durationDay: 3600
+    #durationNight is 720 seconds by default (= 12 minutes)
+    durationNight: 720
+    allowtimechange: true
+    allowsleep: true
+    #This is the name of the Server-World you want to change the time in. 
+    worldname: world
+save:
+    lastSetTime: 0
+    
+    

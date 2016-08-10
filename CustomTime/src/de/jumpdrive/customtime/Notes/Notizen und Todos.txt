@@ -1,0 +1,14 @@
+TODO:
+- Wenn der CustomTimeTask zum ersten mal gestartet wird, und lastSetTime noch null ist, nicht gleich die LastSetTime aus den Einstellungen nehmen, sonedrn erst vergleichen, ob die aktuelle ServerZeit vieleicht höher ist als die gespeicherte lastSetTime
+
+- Eine verzögerung für das gemeinsame Schlafen einbauen (ein Task der nach 2 Sek ausgeführt wird und erst dann den command an CustomTimeTask sendet)
+=> Achtung: Es darf immer nur einen solchen Task geben
+
+- git Versioniereung aktivieren und auf github hochladen
+
+- Die Befehle eingermaßen implementieren
+
+- Den Anfang und Ende vom Tag definierbar machen
+
+
+Besserer Tag: 23300 - 0 - 12900

@@ -1,0 +1,11 @@
+main: de.jumpdrive.customtime.CustomTimeMain
+name: CustomTime
+version: 0.1
+author: lucas
+description: With this plugin it is possible to configure the duration of day and night on your Spigot Server
+commands:
+    customtime:
+        description: Enables or disables cutomtime
+        usage: /customtime
+        permission: jumpdrive.admin
+        permission-message: You don't have the jumpdrive.admin permission.

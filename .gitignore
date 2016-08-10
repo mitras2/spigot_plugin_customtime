@@ -1,0 +1,28 @@
+#ant specific
+dist/
+build/
+
+#netbeans specific
+# no idea what core was good for !?
+#core
+CustomTime/nbproject/*
+!CustomTime/nbproject/project.properties
+!CustomTime/nbproject/project.xml
+
+#java specific
+*.class
+
+#general swap/backup files
+*.so
+*.log
+*.out
+*~
+*.swp
+*.DS_Store
+*.lock
+
+#windows stuff
+Thumbs.db
+
+#linux specific stuff
+.Trashes
