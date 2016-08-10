@@ -8,12 +8,10 @@ import de.jumpdrive.customtime.tasks.StartDaylightTask;
 import de.jumpdrive.customtime.tasks.StopDaylightTask;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 /**
  * @author lucas
@@ -23,6 +21,8 @@ public class CustomTimeMain extends JavaPlugin {
     private CustomTimeTask customTimeTask;
     private CommandHandler commandHandler;
     private EventListener eventListener;
+    
+    private CommandTabComplete tabCompletion = new CommandTabComplete();
     
     @Override
     public void onEnable() {
@@ -108,35 +108,8 @@ public class CustomTimeMain extends JavaPlugin {
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
         List<String> l = new ArrayList<String>();
         
-        if(cmd.getName().equalsIgnoreCase("customtime")){
-            if(args.length == 1){
-                if(args[0].startsWith("of") || args[0].startsWith("off")){
-                    l.add("off");
-                    return l;
-                }
-                if(args[0].startsWith("on")){
-                    l.add("on");
-                    return l;
-                }
-                if(args[0].startsWith("o")){
-                    l.add("on");
-                    l.add("off");
-                    return l;
-                }
-                if(args[0].startsWith("h")){
-                    l.add("help");
-                    return l;
-                }
-                if(args[0].startsWith("")){
-                    l.add("help");
-                    l.add("on");
-                    l.add("off");
-                    return l;
-                }
-            }
-        }
+        return tabCompletion.tabComplete(sender, cmd, label, args);
         
-        return l;
     }
     
 }

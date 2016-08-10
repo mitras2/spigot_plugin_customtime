@@ -283,8 +283,16 @@ public class CustomTimeTask extends BukkitRunnable {
         //setTime(lastSetTime)
         //save lastSetTime
         lastSetTime += offset;
+        /*
+        TODO Probiere Alternative
         String timeSetCmd = "time set " + lastSetTime;
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), timeSetCmd);
+        */
+        /*
+        serverWorld.setFullTime(lastSetTime);
+        */
+        serverWorld.setTime(lastSetTime);
+        Bukkit.getServer().getLogger().log(Level.INFO, "New Time is: " + Long.toString(serverWorld.getFullTime()));
         lastSetTimeSaver.saveNewLastSetTime(plugin, lastSetTime);
             
         //Reset the temporary vars
