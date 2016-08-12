@@ -6,7 +6,6 @@ import de.jumpdrive.customtime.tasks.CustomTimeTask;
 import de.jumpdrive.customtime.settings.SettingPollingrate;
 import de.jumpdrive.customtime.tasks.StartDaylightTask;
 import de.jumpdrive.customtime.tasks.StopDaylightTask;
-import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -22,7 +21,7 @@ public class CustomTimeMain extends JavaPlugin {
     private CommandHandler commandHandler;
     private EventListener eventListener;
     
-    private CommandTabComplete tabCompletion = new CommandTabComplete();
+    private final CommandTabComplete tabCompletion = new CommandTabComplete();
     
     @Override
     public void onEnable() {
@@ -105,8 +104,8 @@ public class CustomTimeMain extends JavaPlugin {
         }
     }
     
+    @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
-        List<String> l = new ArrayList<String>();
         
         return tabCompletion.tabComplete(sender, cmd, label, args);
         

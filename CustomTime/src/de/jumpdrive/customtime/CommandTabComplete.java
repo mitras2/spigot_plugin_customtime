@@ -18,6 +18,39 @@ public class CommandTabComplete {
         
         if(cmd.getName().equalsIgnoreCase("customtime")){
             if(args.length == 1){
+                if(args[0].startsWith("0")){
+                    l.add("0");
+                    return l;
+                }
+                if(args[0].startsWith("1")){
+                    l.add("1");
+                    return l;
+                }
+                
+                if(args[0].startsWith("a")){
+                    l.add("autostart");
+                    return l;
+                }
+                
+                if(args[0].startsWith("h")){
+                    l.add("help");
+                    return l;
+                }
+                
+                if(args[0].startsWith("sto")){
+                    l.add("stop");
+                    return l;
+                }
+                if(args[0].startsWith("sta")){
+                    l.add("start");
+                    return l;
+                }
+                if(args[0].startsWith("s")){
+                    l.add("start");
+                    l.add("stop");
+                    return l;
+                }
+                
                 if(args[0].startsWith("of")){
                     l.add("off");
                     return l;
@@ -31,41 +64,18 @@ public class CommandTabComplete {
                     l.add("off");
                     return l;
                 }
-                if(args[0].startsWith("1")){
-                    l.add("1");
-                    return l;
-                }
-                if(args[0].startsWith("0")){
-                    l.add("0");
-                    return l;
-                }
-                if(args[0].startsWith("sto")){
-                    l.add("stop");
-                    return l;
-                }
-                if(args[0].startsWith("sta")){
-                    l.add("start");
+                
+                if(args[0].startsWith("p")){
+                    l.add("pollingrate");
                     return l;
                 }
                 
-                if(args[0].startsWith("s")){
-                    l.add("start");
-                    l.add("stop");
-                    return l;
-                }
-                if(args[0].startsWith("h")){
-                    l.add("help");
-                    return l;
-                }
-                if(args[0].startsWith("a")){
-                    l.add("autostart");
-                    return l;
-                }
                 if(args[0].startsWith("")){
                     l.add("help");
                     l.add("on");
                     l.add("off");
                     l.add("autostart");
+                    l.add("pollingrate");
                     return l;
                 }
             }
@@ -81,6 +91,7 @@ public class CommandTabComplete {
                         return l;
                     }
                 }
+                
                 if(args[0].equalsIgnoreCase("autostart")){
                     if(args[1].startsWith("t")){
                         l.add("true");
@@ -118,6 +129,13 @@ public class CommandTabComplete {
                     if(args[1].startsWith("")){
                         l.add("true");
                         l.add("false");
+                        l.add("help");
+                        return l;
+                    }
+                }
+                
+                if(args[0].equalsIgnoreCase("pollingrate")){
+                    if(args[1].startsWith("h")){
                         l.add("help");
                         return l;
                     }

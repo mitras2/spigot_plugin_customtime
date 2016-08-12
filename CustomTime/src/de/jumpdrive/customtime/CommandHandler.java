@@ -71,9 +71,8 @@ public class CommandHandler {
                                 customtime_pollingrate_help(sender);
                                 return true;
                             }
-                            //TODO reparieren !!!
-                            if(Integer.parseInt(args[1]) > 0){
-                                
+                            if(h.isInteger(args[1]) && Integer.parseInt(args[1]) > 0){
+                                customtime_pollingrate_int(sender, Integer.parseInt(args[1]));
                             }
                             //Form: customtime pollingrate CRAP
                             customtime_pollingrate(sender);
@@ -174,7 +173,7 @@ public class CommandHandler {
         
     }
     
-    private void customtime_pollingrate_int(CommandSender sender){
+    private void customtime_pollingrate_int(CommandSender sender, int pollingrate){
         
     }
     

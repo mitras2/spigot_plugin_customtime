@@ -22,7 +22,7 @@ public class CustomTimeTask extends BukkitRunnable {
     private final World serverWorld;
     
     /**
-     * <b>allowTimeChange</b> is a boolean that defines wether teh plugin accepts changes in 
+     * <b>allowTimeChange</b> is a boolean that defines wether the plugin accepts changes in 
      * game time, or wether it reverts them with the next run().<br>
      * <i>true</i> means that changes are accepted and time goes on based on the changed times.<br>
      * <i>false</i> means that the plugin will revert the changes made on the gameTime.
