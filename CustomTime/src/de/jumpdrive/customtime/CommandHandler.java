@@ -65,6 +65,22 @@ public class CommandHandler {
                             customtime_autostart(sender);
                             return true;
                         }
+                    } else if(args[0].equalsIgnoreCase("pollingrate")){
+                        if(args.length > 1){
+                            if(h.compare(args[1], new String[] {"help"})){
+                                customtime_pollingrate_help(sender);
+                                return true;
+                            }
+                            //TODO reparieren !!!
+                            if(Integer.parseInt(args[1]) > 0){
+                                
+                            }
+                            //Form: customtime pollingrate CRAP
+                            customtime_pollingrate(sender);
+                        } else {
+                            customtime_pollingrate(sender);
+                            return true;
+                        }
                     } else if(args[0].equalsIgnoreCase("help")){
                         // HELP
                         customtime_help(sender);
@@ -154,6 +170,18 @@ public class CommandHandler {
         h.messagesToSender(sender, autostart_help);
     }
     
+    private void customtime_pollingrate(CommandSender sender){
+        
+    }
+    
+    private void customtime_pollingrate_int(CommandSender sender){
+        
+    }
+    
+    private void customtime_pollingrate_help(CommandSender sender){
+        
+    }
+
     
     
     ////////////////////////////////////////////////////////////////////////
