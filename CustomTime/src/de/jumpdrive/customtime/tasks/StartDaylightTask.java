@@ -2,12 +2,11 @@ package de.jumpdrive.customtime.tasks;
 
 import de.jumpdrive.customtime.CustomTimeMain;
 import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * @author lucas
  */
-public class StartDaylightTask extends BukkitRunnable{
+public class StartDaylightTask implements Runnable{
     
     private CustomTimeMain plugin;
     private final String STOP_DAYLIGHT_CMD = "gamerule doDaylightCycle true";
@@ -29,12 +28,6 @@ public class StartDaylightTask extends BukkitRunnable{
         }
     }
     
-    @Override
-    public synchronized void cancel() throws IllegalStateException{
-        super.cancel();
-    }
-    
-       
     
     private boolean startDaylightCycleCmd(){
         return Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), STOP_DAYLIGHT_CMD);

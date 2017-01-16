@@ -3,23 +3,25 @@ package de.jumpdrive.customtime.tasks;
 import de.jumpdrive.customtime.CustomTimeMain;
 import de.jumpdrive.customtime.settings.SaveLastSetTime;
 import de.jumpdrive.customtime.settings.SettingAllowTimeChange;
+import de.jumpdrive.customtime.settings.SettingAllowsleep;
 import de.jumpdrive.customtime.settings.SettingDurationDay;
 import de.jumpdrive.customtime.settings.SettingDurationNight;
 import de.jumpdrive.customtime.settings.SettingWorldName;
-import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * @author lucas
  */
-public class CustomTimeTask extends BukkitRunnable {
+public class CustomTimeTask implements Runnable {
     
     private final CustomTimeMain plugin;
 
     private final World serverWorld;
+    
+    
+    
     
     /**
      * <b>allowTimeChange</b> is a boolean that defines wether the plugin accepts changes in 
@@ -49,10 +51,18 @@ public class CustomTimeTask extends BukkitRunnable {
      */
     private float millisPerNightTick;
     /**
+     * <b>sleepAwayTheNight</b> determines, wether the night ends with the next run() 
+     * when all Players sleep or wether the plugin ignores sleeping players.
+     */
+    private boolean sleepAwayTheNight = false;        
+    
+    
+    /**
      * <b>lastSetTime</b> is a long that holds the FullTimeTicks that were last set by CustomTimeTask.
-     * After every run() os CustomTimeTask, this has to be updated to the new set time.
+     * After every run() of CustomTimeTask, this has to be updated to the new set time.
      */
     private long lastSetTime = 0;
+    
     
     private SaveLastSetTime lastSetTimeSaver;
     
@@ -60,11 +70,6 @@ public class CustomTimeTask extends BukkitRunnable {
     private final String MESSAGE_PREFIX_ERROR = ChatColor.RED + "[ERROR] ";
     private final String MESSAGE_PREFIX_WARNING = ChatColor.YELLOW + "[WARNING] ";
     
-    /**
-     * In <b>sleepAwayTheNight</b> wird gespeichert, ob mit dem aktuellen run()
-     * die Zeit auf den nächsten morgen geändert werden soll.
-     */
-    private boolean sleepAwayTheNight = false;        
     
     //////Vars that are used and assigned inside the run()
     //Der epoch-Zeitstempel für den letzten gesetzten Tick
@@ -77,11 +82,11 @@ public class CustomTimeTask extends BukkitRunnable {
     private long offset;
     // Der epoch Zeitstempel für den aktuellen durchlauf von run()
     private long currentRealEpochTime;
-    // Dei Zeit die Verganen ist, seit run() das letzte mal durchlaufen wurde
+    // Die Zeit die Verganen ist, seit run() das letzte mal durchlaufen wurde
     private double deltaTimeEpoch;
-    
-    
-    private int test=0;
+    // Die Information, ob diese Nacht an mit dem nächsten run() übersprungen werden muss,
+    // da alle Spierler schlafen und "sleepAwayTheNight" true ist
+    private boolean sleepThisNight = false;
     
     
     
@@ -102,6 +107,10 @@ public class CustomTimeTask extends BukkitRunnable {
         
         lastSetTimeSaver = new SaveLastSetTime();
         lastSetTime = lastSetTimeSaver.getSaveValue(plugin);
+        
+        SettingAllowsleep settingAllowsleep = new SettingAllowsleep();
+        sleepAwayTheNight = settingAllowsleep.getSettingValue(plugin);
+
         
         SettingWorldName settingWorldName = new SettingWorldName();
         String worldName = settingWorldName.getSettingValue(plugin);
@@ -186,7 +195,7 @@ public class CustomTimeTask extends BukkitRunnable {
         
         
         
-        // Prüfen ob in diesem run() die Zeit uaf den nächsten Morgen gesetzt werden soll, 
+        // Prüfen ob in diesem run() die Zeit auf den nächsten Morgen gesetzt werden soll, 
         // weil alle Spieler geschlafen haben
             // dayTimeMorning legt fest welche Zeit nach dem schlafen als "Morgen" eingestellt wird.
             // berechne, welche Tageszeit gerade auf dem Server ist
@@ -195,7 +204,7 @@ public class CustomTimeTask extends BukkitRunnable {
                 // Sonst
                     // Addiere zum offset die Tcks die bis 0 fehlen und die Ticks von 0 bis zur
                     // Morgen-Tick-Zeit
-        if(getSleepAwayTheNight()){
+        if(getSleepThisNight()){
             int dayTimeMorning = 23300;
             long lastSetTimeDay = (lastSetTime + offset) % 24000;
             if(lastSetTimeDay < dayTimeMorning){
@@ -203,8 +212,10 @@ public class CustomTimeTask extends BukkitRunnable {
             } else {
                 offset += ((24000 - lastSetTimeDay) + dayTimeMorning);
             }
-            clearSleepAwayTheNight();
+            clearSleepThisNight();
         }
+        
+        
 
         //Aktuelle Zeit (RealLifeZeit) abfragen
         currentRealEpochTime = System.currentTimeMillis();
@@ -292,7 +303,7 @@ public class CustomTimeTask extends BukkitRunnable {
         serverWorld.setFullTime(lastSetTime);
         */
         serverWorld.setTime(lastSetTime);
-        Bukkit.getServer().getLogger().log(Level.INFO, "New Time is: " + Long.toString(serverWorld.getFullTime()));
+//        Bukkit.getServer().getLogger().log(Level.INFO, "New Time is: " + Long.toString(serverWorld.getFullTime()));
         lastSetTimeSaver.saveNewLastSetTime(plugin, lastSetTime);
             
         //Reset the temporary vars
@@ -344,23 +355,79 @@ public class CustomTimeTask extends BukkitRunnable {
         
     }
     
-    @Override
     public synchronized void cancel() throws IllegalStateException{
-        super.cancel();
+        
     }
-
-    public synchronized void setSleepAwayTheNight(){
-        sleepAwayTheNight = true;
+    
+    
+    /**********************
+     * Syncronized Setters
+     *********************/
+    
+    public synchronized void setAllowTimeChange(boolean allowTimeChange){
+        this.allowTimeChange = allowTimeChange;
+    }
+    
+    public synchronized void setDurationDay(long durationDay){
+        this.durationDay = durationDay;
+        this.millisPerDayTick = this.durationDay / 12f;
+    }
+    
+    public synchronized void setDurationNight(long durationNight){
+        this.durationNight = durationNight;
+        this.millisPerNightTick = this.durationNight / 12f;
+    }
+    
+    public synchronized void setSleepAwayTheNight(boolean sleepAwayTheNight){
+        this.sleepAwayTheNight = sleepAwayTheNight;
+    }
+    
+    
+    // Synchronized-Zugriff auf eine Interne Temporäre Variable
+    public synchronized void sleepThisNight(){
+        if(getSleepAwayTheNight()){
+            sleepAwayTheNight = true;
+        }
+    }
+    
+    private synchronized void clearSleepThisNight(){
+        this.sleepThisNight = false;
+    }
+    
+    
+    
+    /**********************
+     * Syncronized Getters
+     *********************/
+    
+    private synchronized boolean getAllowTimeChange(){
+        return allowTimeChange;
+    }
+    
+    private synchronized long getDurationDay(){
+        return durationDay;
+    }
+    
+    private synchronized float getMillisPerDayTick(){
+        return millisPerDayTick;
+    }
+    
+    private synchronized long getDurationNight(){
+        return durationNight;
+    }
+    
+    private synchronized float getMillisPerNightTick(){
+        return millisPerNightTick;
     }
     
     private synchronized boolean getSleepAwayTheNight(){
         return sleepAwayTheNight;
     }
     
-    private synchronized void clearSleepAwayTheNight(){
-        sleepAwayTheNight = false;
+    
+    // Synchronized-Zugriff auf eine Interne Temporäre Variable
+    private synchronized boolean  getSleepThisNight(){
+        return sleepThisNight;
     }
- 
+    
 }    
-
-//450 | 5000

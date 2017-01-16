@@ -59,7 +59,7 @@ public class EventListener implements Listener{
                 if(!player.isSleeping() && player.getUniqueId().compareTo(event.getPlayer().getUniqueId()) != 0){
                     
                     //DEBUG comment
-                    String logString = "Ein der Spieler " + player.getDisplayName() + " wird NICHT als schlafend gewertet";
+                    String logString = "Der Spieler " + player.getDisplayName() + " wird NICHT als schlafend gewertet";
                     Bukkit.getServer().getLogger().log(Level.INFO, logString );
                     
                     sleepNight = false;
