@@ -7,29 +7,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5aa46dbf-b93a-48df-bbf9-15a69e45bb2c" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/CustomTime_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/spigot_api_1_14_R0_1_SNAPSHOT.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CustomTime/CustomTime.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CustomTime/README CUSTOMTIME.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CustomTime/lib/Spigot/spigot-api-1.14-R0.1-SNAPSHOT.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CustomTime/nbproject/build-impl.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CustomTime/nbproject/genfiles.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomTime/lib/Spigot/spigot-api.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomTime/nbproject/project.properties" beforeDir="false" afterPath="$PROJECT_DIR$/CustomTime/nbproject/project.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomTime/src/de/jumpdrive/customtime/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/CustomTime/src/de/jumpdrive/customtime/CommandHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomTime/src/de/jumpdrive/customtime/CommandTabComplete.java" beforeDir="false" afterPath="$PROJECT_DIR$/CustomTime/src/de/jumpdrive/customtime/CommandTabComplete.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomTime/src/de/jumpdrive/customtime/CustomTimeMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/CustomTime/src/de/jumpdrive/customtime/CustomTimeMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomTime/src/de/jumpdrive/customtime/Notes/Notizen und Todos.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CustomTime/src/de/jumpdrive/customtime/Notes/Notizen und Todos.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomTime/src/de/jumpdrive/customtime/eventSystem/EventListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/CustomTime/src/de/jumpdrive/customtime/eventSystem/EventListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomTime/src/de/jumpdrive/customtime/settings/SettingDurationDay.java" beforeDir="false" afterPath="$PROJECT_DIR$/CustomTime/src/de/jumpdrive/customtime/settings/SettingDurationDay.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomTime/src/de/jumpdrive/customtime/settings/SettingDurationNight.java" beforeDir="false" afterPath="$PROJECT_DIR$/CustomTime/src/de/jumpdrive/customtime/settings/SettingDurationNight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomTime/src/de/jumpdrive/customtime/tasks/CustomTimeTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/CustomTime/src/de/jumpdrive/customtime/tasks/CustomTimeTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CustomTime/src/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/CustomTime/src/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CustomTime/README CUSTOMTIME.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CustomTime/README CUSTOMTIME.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CustomTime/build.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CustomTime/manifest.mf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CustomTime/nbproject/build-impl.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CustomTime/nbproject/genfiles.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CustomTime/nbproject/project.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CustomTime/nbproject/project.xml" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -53,11 +37,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="45">
               <caret line="3" column="4" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/CustomTime/README CUSTOMTIME.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="47" column="25" selection-start-line="47" selection-start-column="25" selection-end-line="47" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -79,6 +72,7 @@
         <option value="$PROJECT_DIR$/CustomTime/src/de/jumpdrive/customtime/CommandHandler.java" />
         <option value="$PROJECT_DIR$/CustomTime/src/plugin.yml" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/CustomTime/README CUSTOMTIME.txt" />
       </list>
     </option>
   </component>
@@ -98,7 +92,7 @@
           <expand>
             <path>
               <item name="customtime" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="CustomTime" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -204,9 +198,6 @@
     <entry file="file://$PROJECT_DIR$/CustomTime/CustomTime.iml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/CustomTime/README CUSTOMTIME.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="jar://$PROJECT_DIR$/CustomTime/lib/Spigot/spigot-api-1.14-R0.1-SNAPSHOT.jar!/org/bukkit/plugin/java/JavaPlugin.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="293">
@@ -306,10 +297,20 @@
     <entry file="file://$PROJECT_DIR$/CustomTime/build.xml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/CustomTime/manifest.mf">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="3" column="4" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CustomTime/README CUSTOMTIME.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="47" column="25" selection-start-line="47" selection-start-column="25" selection-end-line="47" selection-end-column="25" />
         </state>
       </provider>
     </entry>

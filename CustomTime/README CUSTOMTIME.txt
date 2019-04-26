@@ -42,10 +42,10 @@ autostart: true|false
 pollingrate: +int			
 #Gibt an, alle wie viel Ticks die Zeit auf dem Server aktuallisiert wird (letztlich gibe es an, ob die Sonne eher wandert oder oder alle par Minuten springt). Der Default wert von 20 bedeuted, die Sonne wird einmal pro Sekunde aktuallisiert
 
-durationDay: +int			
+durationDay: +long/+int
 #Gibt die Dauer eines Tages in Sekunden an (Default-wert 3600 bedeutet 1 Minecraft-Tag hat 1 Stunde)
 
-durationNight: +int			
+durationNight: +long/+int
 #Gibt die Dauer einer Nacht in Sekunden an (Default-wert 720 bedeuted 1 Minecraft-Nacht hat 12 Minuten)
 
 allowtimechange: true|false	
