@@ -27,31 +27,36 @@ public class CommandHandler {
     
     public boolean processCommand(CommandSender sender,
             Command command, String label, String[] args){
+        if(!sender.isOp()){
+            //User is not allowed to use the custom time command
+            sender.sendMessage(ChatColor.RED + "Only server-operators are allowed to use this command");
+            return true;
+        }
         try {
             if (command.getName().equalsIgnoreCase("customtime")) {
                 if(!(args.length >= 1)){
                     //ARGS sdt out (Hinweis auf Help)
                     customtime(sender);
                 } else {
-                    if(h.compare(args[0], new String[] {"on", "start", "1"})){
+                    if(h.compare(args[0], new String[] {"on", "start"})){
                         if(args.length == 1){
                             customtime_on();
                         } else if(args.length > 1 && h.isHelp(args[1])) {
                             customtime_on_help(sender, args[0]);
                         }
                         // ON | START | 1
-                    } else if(h.compare(args[0], new String[] {"off", "stop", "0"})){
+                    } else if(h.compare(args[0], new String[] {"off", "stop"})){
                         // OFF | STOP | 0
                         customtime_off();
                         return true;
                     } else if (args[0].equalsIgnoreCase("autostart")){
                         if(args.length > 1){
-                            if(h.compare(args[1], new String[] {"true", "1", "on"})){
-                                customtime_autostart_true();
+                            if(h.compare(args[1], new String[] {"true", "on"})){
+                                customtime_autostart_true(sender);
                                 return true;
                             }
-                            if(h.compare(args[1], new String[] {"false", "0", "off"})){
-                                customtime_autostart_false();
+                            if(h.compare(args[1], new String[] {"false", "off"})){
+                                customtime_autostart_false(sender);
                                 return true;
                             }
                             if(h.compare(args[1], new String[] {"help"})){
@@ -63,6 +68,68 @@ public class CommandHandler {
                             return true;
                         } else {
                             customtime_autostart(sender);
+                            return true;
+                        }
+                    } else if(args[0].equalsIgnoreCase("allowSleep")){
+                        if(args.length == 2){
+                            if(h.compare(args[1], new String[] {"true"})){
+                                customtime_allowSleep_true(sender);
+                                return true;
+                            }
+                            if(h.compare(args[1], new String[] {"false"})){
+                                customtime_allowSleep_false(sender);
+                                return true;
+                            }
+                            if(h.compare(args[1], new String[] {"help"})){
+                                customtime_allowSleep_help(sender);
+                                return true;
+                            }
+                            //Form: customtime allowSleep CRAP
+                            customtime_allowSleep_help(sender);
+                        } else {
+                            //Wrong number of arguments
+                            customtime_allowSleep_help(sender);
+                            return true;
+                        }
+                    } else if(args[0].equalsIgnoreCase("duration")){
+                        if(args.length >= 2){
+                            if(h.compare(args[1], new String[] {"day"})){
+                                if(args.length == 3){
+                                    if(h.isInteger(args[2]) && Long.parseLong(args[2]) > 0){
+                                        customtime_duration_day_long(sender, Long.parseLong(args[2]));
+                                        return true;
+                                    }
+                                    //Not a number or it is 'help'
+                                    customtime_duration_day_help(sender);
+                                } else {
+                                    //Wrong number of arguments
+                                    customtime_duration_day(sender);
+                                    return true;
+                                }
+                            }
+                            if(h.compare(args[1], new String[] {"night"})){
+                                if(args.length == 3){
+                                    if(h.isInteger(args[2]) && Long.parseLong(args[2]) > 0){
+                                        customtime_duration_night_long(sender, Long.parseLong(args[2]));
+                                        return true;
+                                    }
+                                    //Not a number or it is 'help'
+                                    customtime_duration_night_help(sender);
+                                } else {
+                                    //Wrong number of arguments
+                                    customtime_duration_night(sender);
+                                    return true;
+                                }
+                            }
+                            if(h.compare(args[1], new String[] {"help"})){
+                                customtime_duration_help(sender);
+                                return true;
+                            }
+                            //Form: customtime allowSleep CRAP
+                            customtime_duration(sender);
+                        } else {
+                            //Wrong number of arguments
+                            customtime_duration(sender);
                             return true;
                         }
                     } else if(args[0].equalsIgnoreCase("pollingrate")){
@@ -112,7 +179,7 @@ public class CommandHandler {
     
     
     private void customtime(CommandSender sender) {
-        String sdttext = "Usage: /realtime <help:on:off>";
+        String sdttext = "Usage: /customtime <help:on:off>";
         sender.sendMessage(ChatColor.RED + sdttext);
     }
     
@@ -136,7 +203,7 @@ public class CommandHandler {
     }
     
     private void customtime_help(CommandSender sender) {
-        String helpText = "Realtime syncs the server Day-Night cycle to the day-night cycle of the servers local time.";
+        String helpText = "The 'Customtime' plugin allows to define how long one day and one night on this Minecraft server should be.";
         sender.sendMessage(ChatColor.RED + helpText);
         customtime(sender);
     }
@@ -150,35 +217,102 @@ public class CommandHandler {
         h.messagesToSender(sender, autostart_help);
     }
     
-    private void customtime_autostart_true(){
+    private void customtime_autostart_true(CommandSender sender){
         SettingAutostart settingAutostart = new SettingAutostart();
         settingAutostart.saveAutostartActive(plugin);
+        sender.sendMessage("Enabled 'autostart' for customtime. The custom day-night-cycle will automatically be started upon server start/restart");
     }
     
-    private void customtime_autostart_false(){
+    private void customtime_autostart_false(CommandSender sender){
         SettingAutostart settingAutostart = new SettingAutostart();
         settingAutostart.saveAutostartDisabled(plugin);
+        sender.sendMessage("Disabled 'autostart' for customtime. The custom day-night-cycle will not be started upon server start/restart");
     }
     
     private void customtime_autostart_help(CommandSender sender){
-        String[] autostart_help = {
-            "Enables the autostart of the customtime-plugin for every server start and restart.",
-            "This does NOT turn customtime on / enable it. Use 'customtime on' to enable the plugin now.",
-            "Usage: /customtime autostart true"
+        this.customtime_autostart(sender);
+    }
+
+    private void customtime_allowSleep_true(CommandSender sender){
+        plugin.setAllowSleep(true);
+        sender.sendMessage("Sleeping enabled. If all players go to bed the night will be skipped.");
+    }
+
+    private void customtime_allowSleep_false(CommandSender sender){
+        plugin.setAllowSleep(false);
+        sender.sendMessage("Sleeping disabled. Even if all players go to bed the night will NOT be skipped.");
+    }
+
+    private void customtime_allowSleep_help(CommandSender sender){
+        String[] allowSleep_help = {
+                "Enables to skip the night when all player lie in their beds.",
+                "Usage: /customtime allowSleep <true:false>"
         };
-        h.messagesToSender(sender, autostart_help);
+        h.messagesToSender(sender, allowSleep_help);
+    }
+
+    private void customtime_duration(CommandSender sender){
+        String[] duration_help = {
+                "Set the duration of night and day in the customtime plugin.",
+                "The duration needs to be given in seconds.",
+                "Usage: /customtime duration <day:night> <int:help>"
+        };
+        h.messagesToSender(sender, duration_help);
+    }
+
+    private void customtime_duration_help(CommandSender sender){
+        this.customtime_duration(sender);
+    }
+
+    private void customtime_duration_day(CommandSender sender){
+        String[] duration_day_help = {
+                "Set the duration of one day in the customtime plugin.",
+                "The duration needs to be specified in seconds",
+                "Usage: /customtime duration day <int:long>"
+        };
+        h.messagesToSender(sender, duration_day_help);
+    }
+
+    private void customtime_duration_day_help(CommandSender sender) {
+        this.customtime_duration_day(sender);
+    }
+
+    private void customtime_duration_day_long(CommandSender sender, long durationDay){
+        plugin.setDuationDay(sender, durationDay);
+    }
+
+    private void customtime_duration_night(CommandSender sender){
+        String[] duration_day_help = {
+                "Set the duration of one night in the customtime plugin.",
+                "The duration needs to be specified in seconds",
+                "Usage: /customtime duration night <int:long>"
+        };
+        h.messagesToSender(sender, duration_day_help);
+    }
+
+    private void customtime_duration_night_help(CommandSender sender){
+        this.customtime_duration_night(sender);
+    }
+
+    private void customtime_duration_night_long(CommandSender sender, long durationNight){
+        plugin.setDurationNight(sender, durationNight);
     }
     
     private void customtime_pollingrate(CommandSender sender){
-        
+        String[] allowSleep_help = {
+                "Sets the polling rate for the plugin. The polling rate determines, how often the plugin updates the time-of-day on the server.",
+                "The polling rate is specified in 'server ticks', where 20 ticks mean the in-game time is updated once per second.",
+                "Usage: /customtime pollingrate <int>"
+        };
+        h.messagesToSender(sender, allowSleep_help);
     }
     
     private void customtime_pollingrate_int(CommandSender sender, int pollingrate){
-        
+        plugin.setPollingRate(sender, pollingrate);
     }
     
     private void customtime_pollingrate_help(CommandSender sender){
-        
+        this.customtime_pollingrate(sender);
     }
 
     

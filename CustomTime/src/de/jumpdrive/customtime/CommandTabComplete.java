@@ -15,20 +15,30 @@ public class CommandTabComplete {
 
     public List<String> tabComplete(CommandSender sender, Command cmd, String label, String[] args){
         List<String> l = new ArrayList<String>();
+
+        // Only gives autocompletion to operators
+        if(!sender.isOp()){
+            return l;
+        }
         
         if(cmd.getName().equalsIgnoreCase("customtime")){
             if(args.length == 1){
-                if(args[0].startsWith("0")){
-                    l.add("0");
-                    return l;
-                }
-                if(args[0].startsWith("1")){
-                    l.add("1");
-                    return l;
-                }
-                
                 if(args[0].startsWith("a")){
                     l.add("autostart");
+                    l.add("allowSleep");
+                    return l;
+                }
+                if(args[0].startsWith("au")){
+                    l.add("autostart");
+                    return l;
+                }
+                if(args[0].startsWith("al")){
+                    l.add("allowSleep");
+                    return l;
+                }
+
+                if(args[0].startsWith("d")){
+                    l.add("duration");
                     return l;
                 }
                 
@@ -69,19 +79,32 @@ public class CommandTabComplete {
                     l.add("pollingrate");
                     return l;
                 }
-                
+
                 if(args[0].startsWith("")){
                     l.add("help");
                     l.add("on");
                     l.add("off");
                     l.add("autostart");
+                    l.add("allowSleep");
+                    l.add("duration");
                     l.add("pollingrate");
                     return l;
                 }
             }
             
             if(args.length == 2){
-                if(h.compare(args[0], new String[] {"on", "start", "1"})){
+                if(h.compare(args[0], new String[] {"on", "start"})){
+                    if(args[1].startsWith("h")){
+                        l.add("help");
+                        return l;
+                    }
+                    if(args[1].startsWith("")){
+                        l.add("help");
+                        return l;
+                    }
+                }
+
+                if(h.compare(args[0], new String[] {"off", "stop"})){
                     if(args[1].startsWith("h")){
                         l.add("help");
                         return l;
@@ -99,14 +122,6 @@ public class CommandTabComplete {
                     }
                     if(args[1].startsWith("f")){
                         l.add("false");
-                        return l;
-                    }
-                    if(args[1].startsWith("1")){
-                        l.add("1");
-                        return l;
-                    }
-                    if(args[1].startsWith("0")){
-                        l.add("0");
                         return l;
                     }
                     if(args[1].startsWith("on")){
@@ -133,9 +148,67 @@ public class CommandTabComplete {
                         return l;
                     }
                 }
+
+                if(args[0].equalsIgnoreCase("allowSleep")){
+                    if(args[1].startsWith("t")){
+                        l.add("true");
+                        return l;
+                    }
+                    if(args[1].startsWith("f")){
+                        l.add("false");
+                        return l;
+                    }
+                    if(args[1].startsWith("h")){
+                        l.add("help");
+                        return l;
+                    }
+                    if(args[1].startsWith("")){
+                        l.add("true");
+                        l.add("false");
+                        l.add("help");
+                        return l;
+                    }
+                }
+
+                if(args[0].equalsIgnoreCase("duration")){
+                    if(args[1].startsWith("d")){
+                        l.add("day");
+                        return l;
+                    }
+                    if(args[1].startsWith("n")){
+                        l.add("night");
+                        return l;
+                    }
+                    if(args[1].startsWith("h")){
+                        l.add("help");
+                        return l;
+                    }
+                    if(args[1].startsWith("")){
+                        l.add("day");
+                        l.add("night");
+                        l.add("help");
+                        return l;
+                    }
+                }
                 
                 if(args[0].equalsIgnoreCase("pollingrate")){
-                    if(args[1].startsWith("h")){
+                    if(args[1].startsWith("")){
+                        l.add("help");
+                        return l;
+                    }
+                }
+            }
+
+            if(args.length == 3){
+                if(args[0].equalsIgnoreCase("duration") && args[1].equalsIgnoreCase("day")){
+                    if(args[1].startsWith("")){
+                        l.add("help");
+                        return l;
+                    }
+                }
+
+                if(args[0].equalsIgnoreCase("duration") && args[1].equalsIgnoreCase("night")){
+                    if(args[1].startsWith("")){
                         l.add("help");
                         return l;
                     }

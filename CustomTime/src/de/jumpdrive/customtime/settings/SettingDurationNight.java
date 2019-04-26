@@ -13,12 +13,12 @@ public class SettingDurationNight {
     private final int DURATION_NIGHT_DEFAULT = 720;
     
     
-    public int getSettingValue(JavaPlugin plugin){
+    public long getSettingValue(JavaPlugin plugin){
         FileConfiguration config = plugin.getConfig();
-        return config.getInt(SETTING_PATH);
+        return config.getLong(SETTING_PATH);
     }
     
-    public void saveDurationNightNew(JavaPlugin plugin, int durationNight){
+    public void saveDurationNightNew(JavaPlugin plugin, long durationNight){
         FileConfiguration config = plugin.getConfig();
         config.set(SETTING_PATH, durationNight);
         plugin.saveConfig();

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="CustomTime:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/CustomTime_jar</output-path>
+    <root id="archive" name="CustomTime.jar">
+      <element id="module-output" name="CustomTime" />
+    </root>
+  </artifact>
+</component>

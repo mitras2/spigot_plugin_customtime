@@ -2,6 +2,8 @@ package de.jumpdrive.customtime;
 
 import de.jumpdrive.customtime.eventSystem.EventListener;
 import de.jumpdrive.customtime.settings.SettingAutostart;
+import de.jumpdrive.customtime.settings.SettingDurationDay;
+import de.jumpdrive.customtime.settings.SettingDurationNight;
 import de.jumpdrive.customtime.tasks.CustomTimeTask;
 import de.jumpdrive.customtime.settings.SettingPollingrate;
 import de.jumpdrive.customtime.tasks.StartDaylightTask;
@@ -22,6 +24,8 @@ public class CustomTimeMain extends JavaPlugin {
     private CustomTimeTask customTimeTask;
     private CommandHandler commandHandler;
     private EventListener eventListener;
+    
+    private final LogLevel logLevel = LogLevel.Info;
     
     private final CommandTabComplete tabCompletion = new CommandTabComplete();
     
@@ -103,8 +107,44 @@ public class CustomTimeMain extends JavaPlugin {
     
     public synchronized void sleepAwayTheNight(){
         if(customTimeBukkitTask != null){
-            customTimeTask.sleepThisNight();
+            customTimeTask.endThisNight();
         }
+    }
+
+    public synchronized void setAllowSleep(boolean allowSleepState){
+        eventListener.setAllowSleep(allowSleepState);
+    }
+
+    public synchronized void setPollingRate(CommandSender sender, int pollingRate){
+        SettingPollingrate settingPollingrate = new SettingPollingrate();
+        settingPollingrate.savePollingrateNew(this, pollingRate);
+
+        if(customTimeBukkitTask != null){
+            sender.sendMessage("Restarting the custom-time-task to update the polling rate.");
+            stopCustomTimeTask();
+            startCustomTimeTask();
+            sender.sendMessage("Custom time task started with updated polling rate.");
+        }
+    }
+
+    public synchronized void setDuationDay(CommandSender sender, long durationDay){
+        SettingDurationDay settingDurationDay = new SettingDurationDay();
+        settingDurationDay.saveDurationDayNew(this, durationDay);
+        if(customTimeTask != null){
+            customTimeTask.updateDurationDay();
+            sender.sendMessage("Running plugin updated to the new duration.");
+        }
+        sender.sendMessage("Duration of one day updated to " + durationDay + " seconds.");
+    }
+
+    public synchronized void setDurationNight(CommandSender sender, long durationNight){
+        SettingDurationNight settingDurationNight = new SettingDurationNight();
+        settingDurationNight.saveDurationNightNew(this, durationNight);
+        if(customTimeTask != null){
+            customTimeTask.updateDurationNight();
+            sender.sendMessage("Running plugin updated to the new duration.");
+        }
+        sender.sendMessage("Duration of one night updated to " + durationNight + " seconds.");
     }
     
     @Override
@@ -113,5 +153,40 @@ public class CustomTimeMain extends JavaPlugin {
         return tabCompletion.tabComplete(sender, cmd, label, args);
         
     }
+    
+    public synchronized void Log(LogLevel level, String message){
+        boolean log = true;
+        switch (level){
+            case Info:
+                log = (logLevel == LogLevel.Info)? true : false;
+                
+                break;
+            case Debug:
+                log = (logLevel == LogLevel.Info || logLevel == LogLevel.Debug) ? true : false;
+                break;
+            case Warn:
+                log = (logLevel == LogLevel.Info || logLevel == LogLevel.Debug || logLevel == LogLevel.Warn) ? true : false;
+                break;
+            default:
+                log = true;
+                break;
+        }
+        
+        if(log){
+            switch (level){
+                case Info:
+                    break;
+                case Debug:
+                    break;
+                case Warn:
+                    break;
+                case Error:
+                    break;
+            }
+        }
+    }
+    
+    public static enum LogLevel {Info, Debug, Warn, Error};
+    
     
 }

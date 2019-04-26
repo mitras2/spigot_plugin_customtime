@@ -13,12 +13,12 @@ public class SettingDurationDay {
     private final int DURATION_DAY_DEFAULT = 3600;
     
     
-    public int getSettingValue(JavaPlugin plugin){
+    public long getSettingValue(JavaPlugin plugin){
         FileConfiguration config = plugin.getConfig();
-        return config.getInt(SETTING_PATH);
+        return config.getLong(SETTING_PATH);
     }
     
-    public void saveDurationDayNew(JavaPlugin plugin, int durationDay){
+    public void saveDurationDayNew(JavaPlugin plugin, long durationDay){
         FileConfiguration config = plugin.getConfig();
         config.set(SETTING_PATH, durationDay);
         plugin.saveConfig();

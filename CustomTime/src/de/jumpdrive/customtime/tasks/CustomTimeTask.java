@@ -9,6 +9,7 @@ import de.jumpdrive.customtime.settings.SettingDurationNight;
 import de.jumpdrive.customtime.settings.SettingWorldName;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameRule;
 import org.bukkit.World;
 
 /**
@@ -19,8 +20,6 @@ public class CustomTimeTask implements Runnable {
     private final CustomTimeMain plugin;
 
     private final World serverWorld;
-    
-    
     
     
     /**
@@ -144,9 +143,10 @@ public class CustomTimeTask implements Runnable {
         //prüfe ob die Gamerule (doDayNightCycle noch auf Aus steht)
             //Wenn doDayNightCyle auf true, stoppe diese Ruannable
             // und geben Nachricht aus
-        boolean doDayNightCycleState = serverWorld.getGameRuleValue("doDaylightCycle").equalsIgnoreCase("true");
+        boolean doDayNightCycleState = serverWorld.getGameRuleValue(GameRule.DO_DAYLIGHT_CYCLE);
         if(doDayNightCycleState){
             Bukkit.broadcastMessage(MESSAGE_PREFIX_ERROR + "doDayNightCycle wurde wieder aktiviert. CustomTime wird automatisch deaktiviert.");
+            //TODO CustomTime über die MAIN stoppen und auf gestoppt setzen
             this.cancel();
         }
             
@@ -154,6 +154,8 @@ public class CustomTimeTask implements Runnable {
         //Aktuelle Tick-Zeit auf dem Server abfragen
         currentServerTickTime = serverWorld.getFullTime();
         
+        //??? Ist das hier richtig?
+        offset = 0;
             
         //prüfe ob sich die Tick-Zeit geändert hat
             // Wenn sich die Zeit geändert hat 
@@ -167,11 +169,11 @@ public class CustomTimeTask implements Runnable {
                 // Wenn die extern gesetzte Zeit größer ist als die aktuelle lastSetTime
                     // lastSetTime = currentServerTickTime
                     // Dann wird lastSetTime auf die extern gesetzte Zeit angepasst.
-                    // Die Zeit wir ab jetzt auf der geänderten Zeit berechnet
+                    // Die Zeit wird ab jetzt auf der geänderten Zeit berechnet
             // => Wenn es nicht erlaubt ist die Zeit zu ändern
                 // lastSetTime bleibt auf den alten Stand vor der Zeitänderung.
                 // Die Zeit wird in den folgenden berchnungne also auf basis der 
-                // Alten Zeit berechnet und dann gesetzt
+                // alten Zeit berechnet und dann gesetzt
         if(currentServerTickTime != lastSetTime ){
             if(allowTimeChange){
                 if(currentServerTickTime + offset < lastSetTime){
@@ -204,7 +206,7 @@ public class CustomTimeTask implements Runnable {
                 // Sonst
                     // Addiere zum offset die Tcks die bis 0 fehlen und die Ticks von 0 bis zur
                     // Morgen-Tick-Zeit
-        if(getSleepThisNight()){
+        if(getEndThisNight()){
             int dayTimeMorning = 23300;
             long lastSetTimeDay = (lastSetTime + offset) % 24000;
             if(lastSetTimeDay < dayTimeMorning){
@@ -212,7 +214,7 @@ public class CustomTimeTask implements Runnable {
             } else {
                 offset += ((24000 - lastSetTimeDay) + dayTimeMorning);
             }
-            clearSleepThisNight();
+            clearEndThisNight();
         }
         
         
@@ -360,6 +362,7 @@ public class CustomTimeTask implements Runnable {
     }
     
     
+    
     /**********************
      * Syncronized Setters
      *********************/
@@ -368,14 +371,16 @@ public class CustomTimeTask implements Runnable {
         this.allowTimeChange = allowTimeChange;
     }
     
-    public synchronized void setDurationDay(long durationDay){
-        this.durationDay = durationDay;
-        this.millisPerDayTick = this.durationDay / 12f;
+    public synchronized void updateDurationDay(){
+        SettingDurationDay settingDurationDay = new SettingDurationDay();
+        durationDay = settingDurationDay.getSettingValue(plugin);
+        millisPerDayTick = durationDay / 12f;
     }
     
-    public synchronized void setDurationNight(long durationNight){
-        this.durationNight = durationNight;
-        this.millisPerNightTick = this.durationNight / 12f;
+    public synchronized void updateDurationNight(){
+        SettingDurationNight settingDurationNight = new SettingDurationNight();
+        durationNight = settingDurationNight.getSettingValue(plugin);
+        millisPerNightTick = durationNight / 12f;
     }
     
     public synchronized void setSleepAwayTheNight(boolean sleepAwayTheNight){
@@ -384,13 +389,13 @@ public class CustomTimeTask implements Runnable {
     
     
     // Synchronized-Zugriff auf eine Interne Temporäre Variable
-    public synchronized void sleepThisNight(){
+    public synchronized void endThisNight(){
         if(getSleepAwayTheNight()){
-            sleepAwayTheNight = true;
+            sleepThisNight = true;
         }
     }
     
-    private synchronized void clearSleepThisNight(){
+    private synchronized void clearEndThisNight(){
         this.sleepThisNight = false;
     }
     
@@ -426,7 +431,7 @@ public class CustomTimeTask implements Runnable {
     
     
     // Synchronized-Zugriff auf eine Interne Temporäre Variable
-    private synchronized boolean  getSleepThisNight(){
+    private synchronized boolean  getEndThisNight(){
         return sleepThisNight;
     }
     

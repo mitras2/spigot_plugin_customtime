@@ -35,6 +35,17 @@ public class EventListener implements Listener{
     private void register() {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
+
+    public void setAllowSleep(boolean allowSleepState){
+        SettingAllowsleep settingAllowsleep = new SettingAllowsleep();
+        if(allowSleepState){
+            settingAllowsleep.saveAllowsleep(this.plugin);
+            allowSleep = allowSleepState;
+        } else {
+            settingAllowsleep.saveDenysleep(this.plugin);
+            allowSleep = allowSleepState;
+        }
+    }
     
     
     //Wenn ein Spieler in Bett geht, wird geprüft, ob das Schlafen erlaubt ist
@@ -46,10 +57,14 @@ public class EventListener implements Listener{
             // die Zeit auf den nächsten Morgen zu setzten
     @EventHandler (priority = EventPriority.LOW)
     public void onPlayerBedEnter(PlayerBedEnterEvent event){
-        
+
+        if(event.getBedEnterResult() != PlayerBedEnterEvent.BedEnterResult.OK){
+            return;
+        }
+
         //DEBUG comment
         Bukkit.getServer().getLogger().log(Level.INFO, "Ein Spieler ist ins Bett gegangen" );
-        
+
         if(allowSleep){
             List<Player> playerList = event.getPlayer().getWorld().getPlayers();
 
